@@ -16,8 +16,6 @@ import sqlite3
 
 
 class Ui_MainWindow(object):
-
-
     def loadData(self):
         query = "SELECT * FROM password"
         result = self.conn.execute(query)
@@ -28,12 +26,13 @@ class Ui_MainWindow(object):
                 self.table_data.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))
 
     def setupUi(self, MainWindow):
-        self.conn = sqlite3.connect('password_database.db')
+        self.conn = sqlite3.connect('password_manager.db')
         self.c = self.conn.cursor()
+        self.c.execute("ATTACH DATABASE 'password_manager.db' AS plaintext KEY '';")
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(910, 700)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("data-lock.ico"), QtGui.QIcon.Normal,QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("data-lock.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet("background-color: rgb(50, 50, 50);")
@@ -194,7 +193,7 @@ class Ui_MainWindow(object):
         self.column = self.database_column(self.column)
 
     def delete_data(self):
-        insert = "DELETE FROM password WHERE " + self.column +"='" + self.ID + "'"
+        insert = "DELETE FROM password WHERE " + self.column + "='" + self.ID + "'"
         self.conn.execute(insert)
         self.conn.commit()
         self.loadData()
